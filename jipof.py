@@ -79,7 +79,6 @@ def find_i_plus_one(nlp:spacy.language, sentences:list, known_words:list):
 
 if __name__=="__main__":
 
-    #word_to_test = "姿"
     word_to_test = input("Please enter a word: ")
 
     # load nlp model
