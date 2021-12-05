@@ -1,5 +1,4 @@
 # imports
-from numpy import true_divide
 import spacy
 from jisho_api import sentence as s
 import os
