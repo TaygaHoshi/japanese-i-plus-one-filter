@@ -128,3 +128,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 result.txt
+known/self_vocab.tsv
