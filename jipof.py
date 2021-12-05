@@ -44,7 +44,7 @@ def split_sentence_to_words(nlp:spacy.language, sentence:str):
     result = []
     doc = nlp(sentence)
 
-    include_types = ["NOUN", "VERB", "ADJ", "ADV", "PRON"]
+    include_types = set(["NOUN", "VERB", "ADJ", "ADV", "PRON", "INTJ"])
 
     for token in doc:
         if token.pos_ in include_types:
