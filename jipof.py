@@ -1,12 +1,13 @@
 # imports
 from numpy import true_divide
 import spacy
-import json
-import urllib.request
-from werkzeug.urls import url_fix
+from jisho_api import sentence as s
 import os
+import re
 
 def get_known_words():
+    # read known words from "known" directory next to the script
+
     result = set()
     for filename in os.listdir("./known"):
         with open(os.path.join("./known/", filename), 'r') as f: # open in readonly mode
@@ -19,39 +20,35 @@ def get_known_words():
             
 
 def get_sentences_for_word(target_word:str):
+    # get sentences from jishos with the word
 
     sentences_found = []
 
-    # https://tatoeba.org/en/sentences/search?from=jpn&query=%3D明日&to=eng
-    target_word = "https://tatoeba.org/en/api_v0/search?from=jpn&query=" + target_word + "&sort=random"
+    # get sentences with that word from api
+    # following function returns a list
+    jisho_results = s.Sentence.request(target_word).data
 
-    search_url = url_fix(target_word)
+    for sentence_found in jisho_results:
+        japanese_sentence = sentence_found.japanese
+        # remove furigana
+        # jisho includes furigana in () and []
+        # example sentence: 今日(きょう)は行(い)かない。
+        japanese_sentence = re.sub("[\(\[].*?[\)\]]", "", japanese_sentence)
 
-    with urllib.request.urlopen(search_url) as url:
-        data = json.load(url)
-        
-        for sentence in data["results"]:
-            sentences_found.append(sentence["text"])
+        sentences_found.append(japanese_sentence)
 
     return sentences_found
 
-def does_have_tag(tag:str, tags:str):
-    # check if tags of a word is included in tag
-
-    temp = " ".join(tags.split("-"))
-
-    result = (" " + tag + " ") in (" " + temp + " ")
-    return result
-
 def split_sentence_to_words(nlp:spacy.language, sentence:str):
-    # split a sentence to its words
+    # split a sentence to its words (nouns, adjectives, adverbs, adjectives)
 
     result = []
     doc = nlp(sentence)
 
+    include_types = ["NOUN", "VERB", "ADJ", "ADV", "PRON"]
+
     for token in doc:
-        if does_have_tag("動詞", token.tag_) or does_have_tag("名詞", token.tag_):
-            #print(f"{token.text}\t{token.lemma_}\t{token.tag_}")
+        if token.pos_ in include_types:
             result.append(token.lemma_)
 
     return result
@@ -82,11 +79,14 @@ def find_i_plus_one(nlp:spacy.language, sentences:list, known_words:list):
 
 if __name__=="__main__":
 
+    #word_to_test = "姿"
+    word_to_test = input("Please enter a word: ")
+
     # load nlp model
     nlp = spacy.load("ja_ginza")
 
     # get a list of sentences and a list of known words
-    sentences = get_sentences_for_word("暇")
+    sentences = get_sentences_for_word(word_to_test)
     known_words = get_known_words()
 
     # find i+1s
@@ -94,7 +94,10 @@ if __name__=="__main__":
 
     # save result
     with open("result.txt", "w") as f:
+        f.write("Target:\t"+word_to_test+"\n")
+        print("Target:\t"+word_to_test)
         for sentence in i_plus_one_sentences:
-            #f.write(sentence + "\n")
+            f.write(sentence + "\n")
             print(sentence)
+    
     
