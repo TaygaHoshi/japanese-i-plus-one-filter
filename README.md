@@ -12,10 +12,9 @@ Finds i+1 sentences from Jisho.org, all of which include a word. The term "i+1" 
 
 # Requirements
 ## General Requirements
-Made using Python 3.10.0
-Access to Jisho.org
+* Made using Python 3.10.0
+* Access to Jisho.org
 
 ## External Libraries
-[ja_ginza](https://github.com/megagonlabs/ginza) and its dependencies
-
-[jisho-api](https://pypi.org/project/jisho-api/#description)
+* [ja_ginza](https://github.com/megagonlabs/ginza) and its dependencies
+* [jisho-api](https://pypi.org/project/jisho-api/#description)
