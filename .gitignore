@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 result.txt
 known/self_vocab.tsv
+known/mining.tsv
