@@ -8,7 +8,7 @@ Finds i+1 sentences from Jisho.org, all of which include a word. The term "i+1" 
 4. Compare words of each sentence to words in known words set
 5. Count unknown words found in step 4
 6. If there are exactly 1 unknown word in a sentence, add it to results list
-7. Save results
+7. Show result(s)
 
 # Requirements
 ## General Requirements
