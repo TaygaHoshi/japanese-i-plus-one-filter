@@ -130,3 +130,4 @@ dmypy.json
 result.txt
 known/self_vocab.tsv
 known/mining.tsv
+words.txt
