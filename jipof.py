@@ -76,26 +76,59 @@ def find_i_plus_one(nlp:spacy.language, sentences:list, known_words:list):
                 
     return result
 
+def read_input_words(filepath):
+    input_words = []
+
+    print("--------------------")
+    print("Reading words: ")
+
+    with open(filepath, "r") as input_words_file:
+        for word in input_words_file:
+            print(word.strip())
+            input_words.append(word.strip())
+    
+    print("Done reading words.")
+    print("--------------------")
+
+    return input_words
+
 if __name__=="__main__":
 
-    word_to_test = input("Please enter a word: ")
+    print("\nWelcome to JIPOF.")
 
     # load nlp model
+    print("Loading ja_ginza NLP model.")
     nlp = spacy.load("ja_ginza")
 
-    # get a list of sentences and a list of known words
-    sentences = get_sentences_for_word(word_to_test)
+    # get known words
+    print("Getting known words.")
     known_words = get_known_words()
 
-    # find i+1s
-    i_plus_one_sentences = find_i_plus_one(nlp, sentences, known_words)
+    # get input words
+    words = read_input_words("words.txt")
+    
 
-    # save result
-    with open("result.txt", "w") as f:
-        f.write("Target:\t"+word_to_test+"\n")
-        print("Target:\t"+word_to_test)
+    print("Processing.")
+    output = ""
+
+    for test_word in words:
+        # get a list of sentences for that word
+        sentences = get_sentences_for_word(test_word)
+
+        # find i+1s from those sentences
+        i_plus_one_sentences = find_i_plus_one(nlp, sentences, known_words)
+
+        output += "Target:\t" + test_word + "\n"
+
         for sentence in i_plus_one_sentences:
-            f.write(sentence + "\n")
-            print(sentence)
+            output += sentence + "\n"
+        
+        output += "\n"
     
-    
+    print(output)
+
+    # fill result.txt
+    print("Creating result.txt.")
+    output_file = open("result.txt", "w")
+    output_file.write(output)
+    output_file.close()
